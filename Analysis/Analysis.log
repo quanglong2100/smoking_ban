@@ -1,0 +1,276 @@
+-----------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Long\Desktop\Agulashvili-Kaphley-Tran-298-Replication\Analysis\Anal
+> ysis.log
+  log type:  text
+ opened on:  13 Dec 2019, 01:55:57
+
+. use ..\Data\Smoking.dta
+
+. 
+. graph bar smoker, by(smkban) blabel(total) name(Figure1)
+
+. 
+. ssc install outreg2
+checking outreg2 consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. reg smoker smkban, robust
+
+Linear regression                               Number of obs     =     10,000
+                                                F(1, 9998)        =      75.06
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0078
+                                                Root MSE          =     .42684
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0775583    .008952    -8.66   0.000    -.0951061   -.0600106
+       _cons |   .2895951   .0072619    39.88   0.000     .2753604    .3038298
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, replace
+Analysis.xls
+dir : seeout
+
+. 
+. reg smoker smkban c.age##c.age black hispanic female, robust
+
+Linear regression                               Number of obs     =     10,000
+                                                F(6, 9993)        =      17.65
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0106
+                                                Root MSE          =     .42635
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0764175   .0089997    -8.49   0.000    -.0940587   -.0587764
+         age |   .0040098   .0018895     2.12   0.034      .000306    .0077137
+             |
+ c.age#c.age |  -.0000619   .0000218    -2.84   0.004    -.0001045   -.0000192
+             |
+       black |   .0000176   .0161469     0.00   0.999    -.0316335    .0316687
+    hispanic |  -.0366556   .0131768    -2.78   0.005    -.0624848   -.0108264
+      female |  -.0186884   .0086751    -2.15   0.031    -.0356933   -.0016834
+       _cons |   .2501823   .0391257     6.39   0.000      .173488    .3268767
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, append
+Analysis.xls
+dir : seeout
+
+. 
+. reg smoker smkban c.age##c.age black hispanic female hsdrop hsgrad colsome colgrad, rob
+> ust
+
+Linear regression                               Number of obs     =     10,000
+                                                F(10, 9989)       =      68.75
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.0570
+                                                Root MSE          =     .41631
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0472399   .0089661    -5.27   0.000    -.0648153   -.0296645
+         age |   .0096744   .0018954     5.10   0.000      .005959    .0133898
+             |
+ c.age#c.age |  -.0001318   .0000219    -6.02   0.000    -.0001747   -.0000889
+             |
+       black |  -.0275658   .0160785    -1.71   0.086    -.0590828    .0039513
+    hispanic |  -.1048159   .0139748    -7.50   0.000    -.1322093   -.0774226
+      female |  -.0332569   .0085683    -3.88   0.000    -.0500525   -.0164612
+      hsdrop |   .3227142   .0194885    16.56   0.000     .2845128    .3609156
+      hsgrad |   .2327012   .0125903    18.48   0.000     .2080217    .2573807
+     colsome |   .1642968   .0126248    13.01   0.000     .1395495     .189044
+     colgrad |   .0447983   .0120438     3.72   0.000       .02119    .0684066
+       _cons |  -.0141099   .0414228    -0.34   0.733    -.0953069    .0670872
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, append
+Analysis.xls
+dir : seeout
+
+. 
+. probit smoker smkban, robust
+
+Iteration 0:   log pseudolikelihood = -5537.1662  
+Iteration 1:   log pseudolikelihood = -5498.6826  
+Iteration 2:   log pseudolikelihood = -5498.6669  
+Iteration 3:   log pseudolikelihood = -5498.6669  
+
+Probit regression                               Number of obs     =     10,000
+                                                Wald chi2(1)      =      77.15
+                                                Prob > chi2       =     0.0000
+Log pseudolikelihood = -5498.6669               Pseudo R2         =     0.0070
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.2448062    .027871    -8.78   0.000    -.2994324   -.1901799
+       _cons |   -.554568   .0212275   -26.12   0.000    -.5961732   -.5129629
+------------------------------------------------------------------------------
+
+. margins, dydx(*) atmeans
+
+Conditional marginal effects                    Number of obs     =     10,000
+Model VCE    : Robust
+
+Expression   : Pr(smoker), predict()
+dy/dx w.r.t. : smkban
+at           : smkban          =       .6098 (mean)
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0762353   .0086664    -8.80   0.000    -.0932212   -.0592495
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, append
+Analysis.xls
+dir : seeout
+
+. 
+. probit smoker smkban c.age##c.age black hispanic female, robust
+
+Iteration 0:   log pseudolikelihood = -5537.1662  
+Iteration 1:   log pseudolikelihood = -5484.2799  
+Iteration 2:   log pseudolikelihood = -5484.2301  
+Iteration 3:   log pseudolikelihood = -5484.2301  
+
+Probit regression                               Number of obs     =     10,000
+                                                Wald chi2(6)      =     104.34
+                                                Prob > chi2       =     0.0000
+Log pseudolikelihood = -5484.2301               Pseudo R2         =     0.0096
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.2413474   .0281261    -8.58   0.000    -.2964736   -.1862212
+         age |    .014365   .0065491     2.19   0.028     .0015289     .027201
+             |
+ c.age#c.age |  -.0002187   .0000775    -2.82   0.005    -.0003707   -.0000667
+             |
+       black |   .0014164   .0519204     0.03   0.978    -.1003458    .1031786
+    hispanic |  -.1201009   .0446884    -2.69   0.007    -.2076885   -.0325132
+      female |  -.0593181   .0278445    -2.13   0.033    -.1138923   -.0047439
+       _cons |  -.7080528   .1318532    -5.37   0.000    -.9664803   -.4496253
+------------------------------------------------------------------------------
+
+. margins, dydx(*) atmeans
+
+Conditional marginal effects                    Number of obs     =     10,000
+Model VCE    : Robust
+
+Expression   : Pr(smoker), predict()
+dy/dx w.r.t. : smkban age black hispanic female
+at           : smkban          =       .6098 (mean)
+               age             =     38.6932 (mean)
+               black           =       .0769 (mean)
+               hispanic        =       .1134 (mean)
+               female          =       .5637 (mean)
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0767317   .0089838    -8.54   0.000    -.0943397   -.0591237
+         age |  -.0008136   .0003944    -2.06   0.039    -.0015867   -.0000405
+       black |   .0004503   .0165071     0.03   0.978    -.0319031    .0328037
+    hispanic |  -.0381837   .0142019    -2.69   0.007     -.066019   -.0103484
+      female |   -.018859   .0088524    -2.13   0.033    -.0362094   -.0015087
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, append
+Analysis.xls
+dir : seeout
+
+. 
+. probit smoker smkban c.age##c.age black hispanic female hsdrop hsgrad colsome colgrad, 
+> robust
+
+Iteration 0:   log pseudolikelihood = -5537.1662  
+Iteration 1:   log pseudolikelihood = -5238.7464  
+Iteration 2:   log pseudolikelihood =  -5235.868  
+Iteration 3:   log pseudolikelihood = -5235.8679  
+
+Probit regression                               Number of obs     =     10,000
+                                                Wald chi2(10)     =     542.93
+                                                Prob > chi2       =     0.0000
+Log pseudolikelihood = -5235.8679               Pseudo R2         =     0.0544
+
+------------------------------------------------------------------------------
+             |               Robust
+      smoker |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |    -.15863   .0291099    -5.45   0.000    -.2156843   -.1015757
+         age |   .0345114   .0068839     5.01   0.000     .0210192    .0480035
+             |
+ c.age#c.age |  -.0004675   .0000826    -5.66   0.000    -.0006295   -.0003056
+             |
+       black |  -.0842789   .0534536    -1.58   0.115    -.1890461    .0204883
+    hispanic |  -.3382743   .0493523    -6.85   0.000     -.435003   -.2415457
+      female |  -.1117313    .028841    -3.87   0.000    -.1682585    -.055204
+      hsdrop |    1.14161   .0729708    15.64   0.000     .9985902    1.284631
+      hsgrad |   .8826708   .0603706    14.62   0.000     .7643467    1.000995
+     colsome |   .6771192   .0614448    11.02   0.000     .5566896    .7975488
+     colgrad |   .2346839   .0654163     3.59   0.000     .1064703    .3628976
+       _cons |  -1.734926   .1519802   -11.42   0.000    -2.032802   -1.437051
+------------------------------------------------------------------------------
+
+. margins, dydx(*) atmeans
+
+Conditional marginal effects                    Number of obs     =     10,000
+Model VCE    : Robust
+
+Expression   : Pr(smoker), predict()
+dy/dx w.r.t. : smkban age black hispanic female hsdrop hsgrad colsome colgrad
+at           : smkban          =       .6098 (mean)
+               age             =     38.6932 (mean)
+               black           =       .0769 (mean)
+               hispanic        =       .1134 (mean)
+               female          =       .5637 (mean)
+               hsdrop          =       .0912 (mean)
+               hsgrad          =       .3266 (mean)
+               colsome         =       .2802 (mean)
+               colgrad         =       .1972 (mean)
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      smkban |  -.0503675   .0092661    -5.44   0.000    -.0685287   -.0322062
+         age |  -.0005302   .0004021    -1.32   0.187    -.0013183    .0002579
+       black |  -.0267598   .0169704    -1.58   0.115    -.0600211    .0065015
+    hispanic |  -.1074073   .0156758    -6.85   0.000    -.1381313   -.0766833
+      female |  -.0354764   .0091586    -3.87   0.000     -.053427   -.0175258
+      hsdrop |   .3624788   .0234177    15.48   0.000     .3165809    .4083767
+      hsgrad |   .2802615   .0192723    14.54   0.000     .2424884    .3180346
+     colsome |   .2149957   .0195609    10.99   0.000      .176657    .2533344
+     colgrad |   .0745157   .0207668     3.59   0.000     .0338135     .115218
+------------------------------------------------------------------------------
+
+. outreg2 using Analysis.xls, append
+Analysis.xls
+dir : seeout
+
+. 
+. 
+. save ..\Data\Smoking.dta, replace
+file ..\Data\Smoking.dta saved
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Long\Desktop\Agulashvili-Kaphley-Tran-298-Replication\Analysis\Anal
+> ysis.log
+  log type:  text
+ closed on:  13 Dec 2019, 01:56:03
+-----------------------------------------------------------------------------------------
